@@ -18,9 +18,14 @@ public class main {
     
     public static void main( String[] args ) throws Exception{
                 OpenmlConnector openml = new OpenmlConnector("https://www.openml.org/", "5ff389fda327b06847db93efd0cbc1ed");
-		DataSetDescription dsd = openml.dataGet(61);
-		
-		System.out.println("dataset name: " + dsd.getName()); // output = "dataset name: iris"
+		DataSetDescription data = openml.dataGet(61);
+		System.out.println("datasetTesting  " + data);
+		System.out.println("dataset name: " + data.getName()); // output = "dataset name: iris"
+                
+                
+                
+                
+                
 //        Scanner input = new Scanner( System.in ); 
 ////        System.out.print("Please enter the Dataset ID : ");
 ////        int id = input.nextInt();
