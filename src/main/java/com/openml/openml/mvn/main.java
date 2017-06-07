@@ -4,7 +4,9 @@
  * and open the template in the editor.
  */
 package com.openml.openml.mvn;
-  import org.openml.apiconnector.io.OpenmlConnector;
+import java.io.File;
+import java.net.URL;
+  import org.openml.apiconnector.io.*;
 import org.openml.apiconnector.xml.DataSetDescription;
 import java.util.Scanner;
 
@@ -22,7 +24,11 @@ public class main {
 		System.out.println("datasetTesting  " + data);
 		System.out.println("dataset name: " + data.getName()); // output = "dataset name: iris"
                 
+//                HttpConnector x = new HttpConnector();
+//                System.out.println(data.getDataset("https://www.openml.org/d/62"));
                 
+                URL myURL = new URL("https://www.openml.org/d/62");
+                HttpConnector.getFileFromUrl(myURL ,"C:\\Users",true );
                 
                 
                 
