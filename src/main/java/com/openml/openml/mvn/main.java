@@ -5,6 +5,7 @@
  */
 package com.openml.openml.mvn;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.net.URL;
   import org.openml.apiconnector.io.*;
 import org.openml.apiconnector.xml.DataSetDescription;
@@ -27,9 +28,11 @@ public class main {
 //                HttpConnector x = new HttpConnector();
 //                System.out.println(data.getDataset("https://www.openml.org/d/62"));
                 
-                URL myURL = new URL("https://www.openml.org/d/62");
-                HttpConnector.getFileFromUrl(myURL ,"C:\\Users",true );
+                URL myURL = new URL("https://www.openml.org/data/download/61/?api_key=5ff389fda327b06847db93efd0cbc1ed");
+                String s = ""; 
                 
+//                System.out.println(openml.getOpenmlFileUrl(62,s));
+                HttpConnector.getFileFromUrl(myURL, "openml/test/",true );
                 
                 
 //        Scanner input = new Scanner( System.in ); 
