@@ -5,10 +5,12 @@
  */
 package com.openml.openml.mvn;
 
+import java.net.URL;
 import java.util.Scanner;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataQuality;
+import org.openml.apiconnector.xml.DataQualityList;
 import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.EvaluationScore;
 import org.openml.apiconnector.xml.Run;
@@ -24,40 +26,71 @@ import org.openml.apiconnector.xml.UploadDataSet;
  * @author Sami Ullah Chattha
  */
 public class actions {
+    
+    
+     OpenmlConnector openml = new OpenmlConnector("https://www.openml.org/", "5ff389fda327b06847db93efd0cbc1ed");
+     
 //    public actions(){
 //       
 //    }
-    public int download(int id) throws Exception{
+    public int download() throws Exception{
         
-         OpenmlConnector client = new OpenmlConnector("https://www.openml.org/");
-         DataSetDescription data = client.dataGet(id);
+        int id;
+        int select;
+        String downloadCheck = "Y" ;
+        Scanner input = new Scanner(System.in);
+        
+        while("Y".equals(downloadCheck)){
+        System.out.println("Please enter the of DataSet : ");
+        id = input.nextInt();
+        DataSetDescription data = openml.dataGet(id);
 
-            //Retrieves the description of a specified data set.
-
-
-            String name = data.getName();
-            String version = data.getVersion();
-            String description = data.getDescription();
-            String url = data.getUrl();
-            System.out.print(name);
-
-            //Retrieves the description of the features of a specified data set.
-
-            //        DataFeature reponse = client.dataFeatures(1);
-            //        DataFeature.Feature[] features = reponse.getFeatures();
-            //        String feature_name = features[0].getName();
-            //        String type = features[0].getDataType();
-            //        boolean	isTarget = features[0].getIs_target();
-    
-    
-            //    Retrieves the description of the qualities (meta-features) of a specified data set.
-
-//            DataQuality response = client.dataQuality(1);
-//            DataQuality.Quality[] qualities = reponse.getQualities();
-//            String name2 = qualities[0].getName();
-//            String value = qualities[0].getValue();
+        //Retrieves the description of a specified data set.
+        String name = data.getName();
+        String version = data.getVersion();
+        String description = data.getDescription();
+        String url = data.getUrl();
+        System.out.println("Name :" + name);
+        System.out.println("Version :" + version);
+        System.out.println("Description :" + description);
+        
+//        DataQualitiesList response = openml.dataQualities(id);
+//        String[] qualities = response.getQualities();
 
 
+
+        System.out.println("\n Select an option below : ");
+        System.out.println("\n 1. Press 1 to retrieve the description of the features of dataset : " + id);
+//        System.out.println("\n 2. Press 2 to retrieve the description of the qualities (meta-features) of dataset :" +id);
+        System.out.println("\n 2. Press 2 to download the dataset :"+id);
+        System.out.println("\n 3. Press anyother key to continue :");
+        select = input.nextInt();
+        switch (select) {
+            case 1:
+                    DataFeature reponse = openml.dataFeatures(1);
+                    DataFeature.Feature[] features = reponse.getFeatures();
+                    String feature_name = features[0].getName();
+                    String type = features[0].getDataType();
+                    boolean	isTarget = features[0].getIs_target();
+               break;
+//            case 2:
+//                    DataQuality response2= openml.dataQuality(1,0,10000,null);
+//                    DataQuality.Quality[] qualities = reponse.getQualities();
+//                    String name2 = qualities[0].getName();
+//                    String value = qualities[0].getValue();
+//                break;
+            case 2:
+                    URL myURL = new URL("https://www.openml.org/data/download/"+id+"/?api_key=5ff389fda327b06847db93efd0cbc1ed");
+                    HttpConnector.getFileFromUrl(myURL, "openml/dataSet_"+id+"/",true );
+                    System.out.println("\n Data has been successfully downloaded to /openml/ :");
+                break;
+            default:
+                break;
+        }
+        
+        System.out.println("Do you want to checkout anyother dataSet ? : Y or N : ");
+        downloadCheck = input.next();   
+        }
             return 10;
            
     }
