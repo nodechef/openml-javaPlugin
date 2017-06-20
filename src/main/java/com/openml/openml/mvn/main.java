@@ -28,6 +28,7 @@ public class main {
                    break;
                 case 2:
                     System.out.println("\n Checking the second option: ");
+                    down.upload();
                     break;
                 case 3:
                     break;

@@ -5,6 +5,8 @@
  */
 package com.openml.openml.mvn;
 
+import com.thoughtworks.xstream.XStream;
+import java.io.File;
 import java.net.URL;
 import java.util.Scanner;
 import org.openml.apiconnector.io.OpenmlConnector;
@@ -18,7 +20,9 @@ import org.openml.apiconnector.xml.Run.Parameter_setting;
 import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.Task.Input;
 import org.openml.apiconnector.xml.Task.Output;
+import org.openml.apiconnector.algorithms.Conversion;
 import org.openml.apiconnector.xml.UploadDataSet;
+import org.openml.apiconnector.xstream.XstreamXmlMapping;
 
 
 /**
@@ -97,13 +101,22 @@ public class actions {
     
     
     
-    public int upload(int id) throws Exception{
-//            DataSetDescription description = new DataSetDescription( "iris", "The famous iris dataset", "arff", "class");
-//            UploadDataSet result = client.dataUpload( description, new File("data/path") );
-//            int data_id = result.getId();
-            
-            
-            
+    public int upload() throws Exception{
+        
+       
+
+        DataSetDescription dataset = new DataSetDescription( "Sami_DataSetAgain", "The iris dataset", "arff", "class");
+        XStream xstream = XstreamXmlMapping.getInstance();
+        File description = Conversion.stringToTempFile(xstream.toXML(dataset), "Sami_DataSet2", "xml");
+        String filename = "Sami_DataSet2";
+        String workingDirectory = System.getProperty("user.dir")+"/openml/uploads";
+	File datasetFile = new File(workingDirectory, filename);
+//        File datasetFile = new File( DATASET_PATH );
+        UploadDataSet data = openml.dataUpload( description, datasetFile);
+        int data_id = data.getId();
+        System.out.println("Here's the ID of uploaded dataset : "+ data_id);
+        
+        
 //            Registers an existing dataset (hosted elsewhere). The description needs to include the url of the data set. Throws an exception if the upload failed, see openml.data.upload for error codes.
 
 //            DataSetDescription description = new DataSetDescription( "iris", "The iris dataset", "arff", "class");
@@ -112,22 +125,21 @@ public class actions {
 //            int data_id = result.getId();
 
             return 10;
-           
     }
     
     
     
     public int flow(int id) throws Exception{
 //            Retrieves the description of the flow/implementation with the given id.
-
-//            Implementation flow = client.flowGet(100);
+//
+//            Implementation flow = openml.flowGet(100);
 //            String name = flow.getName();
 //            String version = flow.getVersion();
 //            String description = flow.getDescription();
 //            String binary_url = flow.getBinary_url();
 //            String source_url = flow.getSource_url();
 //            Parameter[] parameters = flow.getParameter();
-        
+//        
         
             return 10;
            
@@ -136,10 +148,10 @@ public class actions {
     public int task(int id) throws Exception{
 //            Retrieves the description of the task with the given id.
 
-//                Task task = client.taskGet(1);
-//                String task_type = task.getTask_type();
-//                Input[] inputs = task.getInputs();
-//                Output[] outputs = task.getOutputs();
+                Task task = openml.taskGet(1);
+                String task_type = task.getTask_type();
+                Input[] inputs = task.getInputs();
+                Output[] outputs = task.getOutputs();
 
             //Retrieves all evaluations for the task with the given id.
 
@@ -160,14 +172,13 @@ public class actions {
     
     public int run (){
 //        Retrieves the description of the run with the given id.
-
-//        Run run = client.runGet(1);
-//        int task_id = run.getTask_id();
-//        int flow_id = run.getImplementation_id();
-//        Parameter_setting[] settings = run.getParameter_settings()
-//        EvaluationScore[] scores = run.getOutputEvaluation();
-
-
+//        Implementation flow = openml.flowGet(100);
+//        String name = flow.getName();
+//        String version = flow.getVersion();
+//        String description = flow.getDescription();
+//        String binary_url = flow.getBinary_url();
+//        String source_url = flow.getSource_url();
+//        Parameter[] parameters = flow.getParameter();
 
         //Deletes the run with the given id (if you are its owner).
 
