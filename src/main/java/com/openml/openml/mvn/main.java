@@ -18,19 +18,33 @@ public class main {
         
         while(true){
             System.out.println("\n Select an option below : ");
-            System.out.println("\n 1. Press 1 to download a dataset : ");
-            System.out.println("\n 2. Press 2 to Upload a dataset : ");
-            System.out.println("\n Press 3 to Exit ");
+            System.out.println("\n 1. Press 1 to view all datasets : ");
+            System.out.println("\n 2. Press 2 to download a dataset : ");
+            System.out.println("\n 3. Press 3 to Upload a dataset : ");
+            System.out.println("\n 4. Press 4 to retrieve the description of the flow/implementation : ");
+            System.out.println("\n 5. Press 5 to retrieve the description of the Task : ");
+            System.out.println("\n 6. Press 6 to retrieve the description of the Run : ");
+            System.out.println("\n Press any other key to Exit ");
             task = input.nextInt();
             switch (task) {
                 case 1:
                    down.download();
                    break;
                 case 2:
+                   down.download();
+                   break;
+                case 3:
                     System.out.println("\n Checking the second option: ");
                     down.upload();
                     break;
-                case 3:
+                case 4:
+                    down.flow();
+                    break;
+                case 5:
+                    down.task(1);
+                    break;
+                case 6:
+                    down.run(1);
                     break;
                 default:
                     break;
