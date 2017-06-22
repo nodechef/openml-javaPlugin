@@ -100,6 +100,7 @@ public class actions {
                         System.out.println("\n Data has been successfully downloaded to /openml/ :");
                     break;
                 default:
+                    System.out.println("Please Press the valid key : ");
                     break;
             }
 
@@ -155,106 +156,175 @@ public class actions {
     public int flow() throws Exception{
 //            Retrieves the description of the flow/implementation with the given id.
             int id;
+            int check1;
             int check =1;
             while(check==1){
                 
-                System.out.println("Enter the ID of flow : ");
-                id = input.nextInt();
-                Flow implementation = openml.flowGet(id);
-                String name = implementation.getName();
-                String version = implementation.getVersion();
-                String description = implementation.getDescription();
-                String binary_url = implementation.getBinary_url();
-                String source_url = implementation.getSource_url();
-                Parameter[] parameters = implementation.getParameter();
-                System.out.println("Flow testing : "+ name+" version : " +version+ "    Description : " +description+ " Binary : "+binary_url+" Source : "+source_url+" parameters :"+parameters);
+                System.out.println("Press 1 to Retrieve the description of flow : ");
+                System.out.println("Press 2 to Retrieve array of id's of all flows/implementations owned by you. : ");
+                System.out.println("Press 3 to Check whether an implementation with the given name and version is already registered on OpenML : ");
+                System.out.println("Press 4 to Remove the flow with the given id (if you are its owner) : ");
+                System.out.println("Press 5 to Upload implementation files (binary and/or source) to OpenML. : ");
+                check1 = input.nextInt();
+                
+                switch(check1){
+                    case 1:
+                        System.out.println("Enter the ID of flow : ");
+                        id = input.nextInt();
+                        Flow implementation = openml.flowGet(id);
+                        String name = implementation.getName();
+                        String version = implementation.getVersion();
+                        String description = implementation.getDescription();
+                        String binary_url = implementation.getBinary_url();
+                        String source_url = implementation.getSource_url();
+                        Parameter[] parameters = implementation.getParameter();
+                        System.out.println("Flow testing : "+ name+" version : " +version+ "    Description : " +description+ " Binary : "+binary_url+" Source : "+source_url+" parameters :"+parameters);
+                        
+                        break;
+                    case 2:
+                        //            Retrieves an array of id's of all flows/implementations owned by you.
+                        FlowOwned  response = openml.flowOwned();
+                        Integer[] ids = response.getIds();
+                        System.out.println("Array of all the ID's : "+ ids);
+                        
+                        break;
+                    case 3:
+        //              Checks whether an implementation with the given name and version is already registered on OpenML.
+                        String checkName;
+                        String checkversion;
+                        System.out.println("Enter the name of Flow : ");                       
+                        checkName = input.next();
+                        System.out.println("Enter the version of Flow : ");
+                        checkversion = input.next();
+                        FlowExists checkFlow = openml.flowExists(checkName, checkversion);
+                        boolean exists = checkFlow.exists();
+                        int flow_id = checkFlow.getId();
+                        System.out.println("Does the flow exits : " + exists );
+                        System.out.println("Flow ID : " + flow_id );
+                        
+                        break;
+                    case 4:
+       //                Removes the flow with the given id (if you are its owner).
+                        int flowID;
+                        System.out.println("Enter the flow ID to delete : " );                        
+                        flowID = input.nextInt();
+                        FlowDelete  response2 = openml.flowDelete(flowID);
+                        
+                         break;
+                    case 5:
+//                          Uploads implementation files (binary and/or source) to OpenML given a description.
+//                        Requires some work
+//                        XStream xstream = XstreamXmlMapping.getInstance();
+//                        Flow flow = new Flow("weka.J48", "3.7.12", "description", "Java", "WEKA 3.7.12");
+//                        File description3 = Conversion.stringToTempFile(xstream.toXML(flow), "some_name", "xml");
+//                        UploadFlow response3 = openml.flowUpload( description3, new File("code.jar"), new File("source.zip"));
+//                        int flow_id3 = response3.getId();
+                        break;
+                    default:
+                        System.out.println("Please Press the valid key : ");
+                        break;
+                }
+                
                 System.out.println("Press 1 to check again or 0 to return to main menu : ");
                 check = input.nextInt();
                 
-            }
-            
-            
-//            Retrieves an array of id's of all flows/implementations owned by you.
-                FlowOwned  response = openml.flowOwned();
-                Integer[] ids = response.getIds();
-//        
-
-//                Checks whether an implementation with the given name and version is already registered on OpenML.
-                FlowExists checkFlow = openml.flowExists("weka.j48", "3.7.12");
-                boolean exists = checkFlow.exists();
-                int flow_id = checkFlow.getId();
-                
-                
-//                Removes the flow with the given id (if you are its owner).
-                FlowDelete  response2 = openml.flowDelete(1);
-
-                
-//                Uploads implementation files (binary and/or source) to OpenML given a description.
-                XStream xstream = XstreamXmlMapping.getInstance();
-                Flow flow = new Flow("weka.J48", "3.7.12", "description", "Java", "WEKA 3.7.12");
-                File description = Conversion.stringToTempFile(xstream.toXML(flow), "some_name", "xml");
-                UploadFlow response3 = openml.flowUpload( description, new File("code.jar"), new File("source.zip"));
-                int flow_id3 = response3.getId();
-                
-                
+            }   
             return 10;
            
     }
     
-    public int task(int id) throws Exception{
-//          Retrieves the description of the task with the given id.
-            Task task = openml.taskGet(id);
-            String task_type = task.getTask_type();
-            Input[] inputs = task.getInputs();
-            Output[] outputs = task.getOutputs();
-            System.out.println("task_type : "+ task_type+" version : " +inputs+ "Description : " +outputs);
-            //Retrieves all evaluations for the task with the given id.
-
-//                TaskEvaluations response = openml.taskEvaluations(1);
-//                Evaluation[] evaluations = response.getEvaluation();
+    public int task() throws Exception{
             
-            
-//            For data streams. Retrieves all evaluations for the task over the specified window of the stream.
+        int id;
+        int check1;
+        int check =1;
+        while(check==1){
 
-            //TaskEvaluations response = client.taskEvaluations(1);
-            //Evaluation[] evaluations = response.getEvaluation();
-        
-        
-            return 10;
+            System.out.println("Press 1 to Retrieve the description of Task : ");
+            System.out.println("Press 2 to Retrieve all evaluations for the task over the specified window of the stream : ");    
+            check1 = input.nextInt();
+             switch(check1){
+                case 1:
+       //          Retrieves the description of the task with the given id.
+                    System.out.println("Please enter the ID of task : ");
+                    id = input.nextInt();
+                    Task task = openml.taskGet(id);
+                    String task_type = task.getTask_type();
+                    Input[] inputs = task.getInputs();
+                    Output[] outputs = task.getOutputs();
+                    System.out.println("task_type : "+ task_type+" version : " +inputs+ "Description : " +outputs);
+                    break;
+                case 2:
+                    //Retrieves all evaluations for the task with the given id.
+//                    TaskEvaluations response = openml.taskEvaluations(1);
+//                    Evaluation[] evaluations = response.getEvaluation();
+                default:
+                    System.out.println("Please Press the valid key : ");
+                    break;
+             }
+             System.out.println("Press 1 to check again or 0 to return to main menu : ");
+             check = input.nextInt();
+        }
+             
+        return 10;
            
     }
     
     
-    public int run (int id) throws Exception{
-//      Retrieves the description of the run with the given id.
-        Run run = openml.runGet(id);
-        int task_id = run.getTask_id();
-        int flow_id = run.getFlow_id();
-        Parameter_setting[] settings = run.getParameter_settings();
-        EvaluationScore[] scores = run.getOutputEvaluation();
-        System.out.println("Task ID  : "+ task_id+" Flow ID : " +flow_id+ " Settings : " +settings + " Scores : " +scores );
+    public int run () throws Exception{
+        int id;
+        int check1;
+        int check =1;
+        while(check==1){
+            
+            System.out.println("Press 1 to Retrieve the description of Run : ");
+            System.out.println("Press 2 to Deletes the Run : ");    
+            System.out.println("Press 3 to  Upload a Run to OpenML : ");    
+            check1 = input.nextInt();
+             switch(check1){
+                case 1:
+                    //      Retrieves the description of the run with the given id.
+                    System.out.println("Please enter the ID of Run : ");
+                    id = input.nextInt();
+                    Run run = openml.runGet(id);
+                    int task_id = run.getTask_id();
+                    int flow_id = run.getFlow_id();
+                    Parameter_setting[] settings = run.getParameter_settings();
+                    EvaluationScore[] scores = run.getOutputEvaluation();
+                    System.out.println("Run ID  : "+ task_id+" Flow ID : " +flow_id+ " Settings : " +settings + " Scores : " +scores );
+                    break;
+                    
+                case 2:
+                    //        Deletes the run with the given id (if you are its owner).
+                    System.out.println("Please enter the ID of Run to Delete : ");
+                    id = input.nextInt();
+                    RunDelete response = openml.runDelete(id);
+                    
+                    break;
+                case 3:
+                    //        Uploads a run to OpenML, including a description and a set of output files depending on the task type.
+//                    Run.Parameter_setting[] parameter_settings = new Run.Parameter_setting[1];
+//                    parameter_settings[0] = Run.Parameter_setting(null, "M", "2");
+//
+//                    Run run2 = new Run(1, "", 100, "setup_string", parameter_settings,new String[]{ "a", "b", "c" });
+//                    Map outputs = new HashMap<String,File>();
+//                    outputs.put("predictions",new File("predictions.arff"));
+//
+//                    XStream xstream = XstreamXmlMapping.getInstance();
+//                    File description = Conversion.stringToTempFile(xstream.toXML(run2), "some_name", "xml");
+//                    UploadRun response2 = openml.runUpload( description, outputs);
+//                    int run_id = response2.getRun_id();
+                    
+                    break;
+                    
+                default:
+                    System.out.println("Please Press the valid key : ");                    
+                    break;
+             }
+              System.out.println("Press 1 to check again or 0 to return to main menu : ");
+             check = input.nextInt();
         
-        
-//        Deletes the run with the given id (if you are its owner).
-        RunDelete response = openml.runDelete(1);
-        
-        
-        
-//        Uploads a run to OpenML, including a description and a set of output files depending on the task type.
-
-    
-//        Run.Parameter_setting[] parameter_settings = new Run.Parameter_setting[1];
-//        parameter_settings[0] = Run.Parameter_setting(null, "M", "2");
-//        
-//        Run run2 = new Run(1, "", 100, "setup_string", parameter_settings,new String[]{ "a", "b", "c" });
-//        Map outputs = new HashMap<String,File>();
-//        outputs.put("predictions",new File("predictions.arff"));
-//        
-//        XStream xstream = XstreamXmlMapping.getInstance();
-//        File description = Conversion.stringToTempFile(xstream.toXML(run2), "some_name", "xml");
-//        UploadRun response2 = openml.runUpload( description, outputs);
-//        int run_id = response2.getRun_id();
-  
+        }
         return 1;
     }
     

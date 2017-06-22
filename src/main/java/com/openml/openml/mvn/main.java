@@ -41,10 +41,10 @@ public class main {
                     down.flow();
                     break;
                 case 5:
-                    down.task(1);
+                    down.task();
                     break;
                 case 6:
-                    down.run(1);
+                    down.run();
                     break;
                 default:
                     break;
