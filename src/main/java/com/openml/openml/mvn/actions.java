@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Scanner;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.DataFeature;
-import org.openml.apiconnector.xml.DataQuality;
 import org.openml.apiconnector.xml.DataQualityList;
 import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.EvaluationScore;
@@ -23,15 +22,16 @@ import org.openml.apiconnector.xml.Task;
 import org.openml.apiconnector.xml.Task.Input;
 import org.openml.apiconnector.xml.Task.Output;
 import org.openml.apiconnector.algorithms.Conversion;
+import org.openml.apiconnector.xml.Data;
+import org.openml.apiconnector.xml.Data.DataSet;
 import org.openml.apiconnector.xml.Flow;
 import org.openml.apiconnector.xml.Flow.Parameter;
 import org.openml.apiconnector.xml.UploadDataSet;
-import org.openml.apiconnector.xml.EvaluationList;
-import org.openml.apiconnector.xml.EvaluationList.Evaluation;
 import org.openml.apiconnector.xml.FlowDelete;
 import org.openml.apiconnector.xml.FlowExists;
 import org.openml.apiconnector.xml.FlowOwned;
 import org.openml.apiconnector.xml.RunDelete;
+import org.openml.apiconnector.xml.Tasks;
 import org.openml.apiconnector.xml.UploadFlow;
 import org.openml.apiconnector.xml.UploadRun;
 import org.openml.apiconnector.xstream.XstreamXmlMapping;
@@ -46,9 +46,19 @@ public class actions {
     
      OpenmlConnector openml = new OpenmlConnector("https://www.openml.org/", "5ff389fda327b06847db93efd0cbc1ed");
      Scanner input = new Scanner(System.in);
+     private static final XStream xstream = XstreamXmlMapping.getInstance();
 //    public actions(){
 //       
 //    }
+     
+      public int dataSetList() throws Exception {
+           Data data = openml.dataList("");
+            for (DataSet d : data.getData()) {
+                System.out.println("ID : "+d.getDid()+" | Name : "+ d.getName() +" | Status  : "+ d.getStatus()+"  | Version  : "+ d.getVersion());
+            }
+          
+          return 1;
+      }
     public int download() throws Exception{
         
         int id;
@@ -76,7 +86,6 @@ public class actions {
 
             System.out.println("\n Select an option below : ");
             System.out.println("\n 1. Press 1 to retrieve the description of the features of dataset : " + id);
-    //        System.out.println("\n 2. Press 2 to retrieve the description of the qualities (meta-features) of dataset :" +id);
             System.out.println("\n 2. Press 2 to download the dataset :"+id);
             System.out.println("\n 3. Press anyother key to continue :");
             select = input.nextInt();
@@ -88,12 +97,6 @@ public class actions {
                         String type = features[0].getDataType();
                         boolean	isTarget = features[0].getIs_target();
                    break;
-    //            case 2:
-    //                    DataQuality response2= openml.dataQuality(1,0,10000,null);
-    //                    DataQuality.Quality[] qualities = reponse.getQualities();
-    //                    String name2 = qualities[0].getName();
-    //                    String value = qualities[0].getValue();
-    //                break;
                 case 2:
                         URL myURL = new URL("https://www.openml.org/data/download/"+id+"/?api_key=5ff389fda327b06847db93efd0cbc1ed");
                         HttpConnector.getFileFromUrl(myURL, "openml/dataSet_"+id+"/",true );
@@ -127,9 +130,9 @@ public class actions {
         System.out.println("Press 1 to upload file or Press 2 to post the URL of the file hosted somewhere else(Recommended if"
                 + "file size is > 100MB ) : ");
         
+        
         check = input.nextInt();
         if(check==1){
-            XStream xstream = XstreamXmlMapping.getInstance();
             String filename;
             System.out.println("Filename : ");
             filename = input.next();
@@ -143,9 +146,11 @@ public class actions {
         }else if(check==2){
 //           Registers an existing dataset (hosted elsewhere). The description needs to include the url of the data set. Throws an exception if the upload failed, see openml.data.upload for error codes.
 //            
-//            dataset.setUrl("http://datarepository.org/mydataset");
-//            UploadDataSet data = openml.dataUpload( description );
-//            int data_id = data.getId();
+                String dataUrl = "http://storm.cis.fordham.edu/~gweiss/data-mining/weka-data/cpu.arff";
+		DataSetDescription dsd = new DataSetDescription("anneal", "Unit test should be deleted", "arff", dataUrl, "class");
+		String dsdXML = xstream.toXML(dsd);
+		File description = Conversion.stringToTempFile(dsdXML, "test-data", "arff");
+		UploadDataSet ud = openml.dataUpload(description, null);
 
         }
             return 10;
@@ -214,11 +219,10 @@ public class actions {
                     case 5:
 //                          Uploads implementation files (binary and/or source) to OpenML given a description.
 //                        Requires some work
-//                        XStream xstream = XstreamXmlMapping.getInstance();
-//                        Flow flow = new Flow("weka.J48", "3.7.12", "description", "Java", "WEKA 3.7.12");
-//                        File description3 = Conversion.stringToTempFile(xstream.toXML(flow), "some_name", "xml");
-//                        UploadFlow response3 = openml.flowUpload( description3, new File("code.jar"), new File("source.zip"));
-//                        int flow_id3 = response3.getId();
+                        Flow flow = new Flow("weka.J48", "3.7.12", "description", "Java", "WEKA 3.7.12");
+                        File description3 = Conversion.stringToTempFile(xstream.toXML(flow), "some_name", "xml");
+                        UploadFlow response3 = openml.flowUpload( description3, new File("code.jar"), new File("source.zip"));
+                        int flow_id3 = response3.getId();
                         break;
                     default:
                         System.out.println("Please Press the valid key : ");
@@ -256,8 +260,10 @@ public class actions {
                     break;
                 case 2:
                     //Retrieves all evaluations for the task with the given id.
-//                    TaskEvaluations response = openml.taskEvaluations(1);
-//                    Evaluation[] evaluations = response.getEvaluation();
+                    Tasks tasks = openml.taskList("");
+                    for(org.openml.apiconnector.xml.Tasks.Task t : tasks.getTask() ){
+                        System.out.println("ID : "+t.getDid() +" | Name : "+t.getName()+" | Status : " +t.getStatus() + " | Task Type "+ t.getTask_type());
+                    }
                 default:
                     System.out.println("Please Press the valid key : ");
                     break;
@@ -304,7 +310,7 @@ public class actions {
                 case 3:
                     //        Uploads a run to OpenML, including a description and a set of output files depending on the task type.
 //                    Run.Parameter_setting[] parameter_settings = new Run.Parameter_setting[1];
-//                    parameter_settings[0] = Run.Parameter_setting(null, "M", "2");
+//                    parameter_settings[0] = newParameter_setting(null, "M", "2");
 //
 //                    Run run2 = new Run(1, "", 100, "setup_string", parameter_settings,new String[]{ "a", "b", "c" });
 //                    Map outputs = new HashMap<String,File>();
@@ -314,6 +320,14 @@ public class actions {
 //                    File description = Conversion.stringToTempFile(xstream.toXML(run2), "some_name", "xml");
 //                    UploadRun response2 = openml.runUpload( description, outputs);
 //                    int run_id = response2.getRun_id();
+                    String[] tags = {"first_tag", "another_tag"};
+                    Run r = new Run(1, null, 10, null, null, tags);
+                    String runXML = xstream.toXML(r);
+                    File runFile = Conversion.stringToTempFile(runXML, "runtest",  "xml");
+                    File predictions = new File("data/test.arff"); 
+                    Map<String,File> output_files = new HashMap<String, File>();
+                    output_files.put("predictions", predictions);
+                    UploadRun ur = openml.runUpload(runFile, output_files);
                     
                     break;
                     

@@ -28,7 +28,7 @@ public class main {
             task = input.nextInt();
             switch (task) {
                 case 1:
-                   down.download();
+                   down.dataSetList();
                    break;
                 case 2:
                    down.download();
