@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Scanner;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.DataFeature;
-import org.openml.apiconnector.xml.DataQualityList;
 import org.openml.apiconnector.xml.DataSetDescription;
 import org.openml.apiconnector.xml.EvaluationScore;
 import org.openml.apiconnector.xml.Run;
