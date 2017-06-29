@@ -145,13 +145,17 @@ public class actions {
             System.out.println("Here's the ID of uploaded dataset : "+ data_id);
         }else if(check==2){
 //           Registers an existing dataset (hosted elsewhere). The description needs to include the url of the data set. Throws an exception if the upload failed, see openml.data.upload for error codes.
-//            
-                String dataUrl = "http://storm.cis.fordham.edu/~gweiss/data-mining/weka-data/cpu.arff";
-		DataSetDescription dsd = new DataSetDescription("anneal", "Unit test should be deleted", "arff", dataUrl, "class");
+//                            
+//                String dataUrl = "http://storm.cis.fordham.edu/~gweiss/data-mining/weka-data/cpu.arff";
+                String dataUrl ;
+                System.out.println("Paste the URL of the dataSet : ");
+                dataUrl = input.next();
+		DataSetDescription dsd = new DataSetDescription(dataSetName, dataSetDescription, "arff", dataUrl, "class");
 		String dsdXML = xstream.toXML(dsd);
 		File description = Conversion.stringToTempFile(dsdXML, "test-data", "arff");
 		UploadDataSet ud = openml.dataUpload(description, null);
-
+                int data_id = ud.getId();
+                System.out.println("Here's the ID of uploaded dataset : "+ data_id);
         }
             return 10;
     }
