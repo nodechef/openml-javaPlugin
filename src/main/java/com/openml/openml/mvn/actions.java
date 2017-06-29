@@ -273,6 +273,7 @@ public class actions {
                     break;
                 case 2:
                     //Retrieves all evaluations for the task with the given id.
+                    
                     Tasks tasks = openml.taskList("");
                     for(org.openml.apiconnector.xml.Tasks.Task t : tasks.getTask() ){
                         System.out.println("ID : "+t.getDid() +" | Name : "+t.getName()+" | Status : " +t.getStatus() + " | Task Type "+ t.getTask_type());
