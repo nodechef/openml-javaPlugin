@@ -34,7 +34,6 @@ public class main {
                    down.download();
                    break;
                 case 3:
-                    System.out.println("\n Checking the second option: ");
                     down.upload();
                     break;
                 case 4:

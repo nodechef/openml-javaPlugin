@@ -8,6 +8,7 @@ package com.openml.openml.mvn;
 import com.thoughtworks.xstream.XStream;
 import java.io.File;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -311,7 +312,7 @@ public class actions {
                     int flow_id = run.getFlow_id();
                     Parameter_setting[] settings = run.getParameter_settings();
                     EvaluationScore[] scores = run.getOutputEvaluation();
-                    System.out.println("Run ID  : "+ task_id+" Flow ID : " +flow_id+ " Settings : " +settings + " Scores : " +scores );
+                    System.out.println("Run ID  : "+ task_id+" Flow ID : " +flow_id+ " Settings : " +Arrays.toString(settings) + " Scores : " +Arrays.toString(scores) );
                     break;
                     
                 case 2:
@@ -323,26 +324,25 @@ public class actions {
                     break;
                 case 3:
                     //        Uploads a run to OpenML, including a description and a set of output files depending on the task type.
-//                    Run.Parameter_setting[] parameter_settings = new Run.Parameter_setting[1];
-//                    parameter_settings[0] = newParameter_setting(null, "M", "2");
-//
-//                    Run run2 = new Run(1, "", 100, "setup_string", parameter_settings,new String[]{ "a", "b", "c" });
-//                    Map outputs = new HashMap<String,File>();
-//                    outputs.put("predictions",new File("predictions.arff"));
-//
-//                    XStream xstream = XstreamXmlMapping.getInstance();
-//                    File description = Conversion.stringToTempFile(xstream.toXML(run2), "some_name", "xml");
-//                    UploadRun response2 = openml.runUpload( description, outputs);
-//                    int run_id = response2.getRun_id();
-                    String[] tags = {"first_tag", "another_tag"};
+                    String[] tags = new String[2];                    
+                    String tag;
+                    System.out.println("Enter the First Tag : ");
+                    tag = input.next();
+                    tags[0] = tag;
+                    System.out.println("Enter the Second Tag : ");
+                    tag = input.next();
+                    tags[1] = tag;
                     Run r = new Run(1, null, 10, null, null, tags);
                     String runXML = xstream.toXML(r);
                     File runFile = Conversion.stringToTempFile(runXML, "runtest",  "xml");
-                    File predictions = new File("data/test.arff"); 
+                    String fileName;
+                    System.out.println("Enter the enter the name of file with extension and please place it inside uploads folder : ");
+                    fileName = input.next();
+                    File predictions = new File("uplaods/"+fileName); 
                     Map<String,File> output_files = new HashMap<String, File>();
                     output_files.put("predictions", predictions);
                     UploadRun ur = openml.runUpload(runFile, output_files);
-                    
+                    System.out.println("Here's the ID of uploaded Run : " + ur.getRun_id());
                     break;
                     
                 default:
