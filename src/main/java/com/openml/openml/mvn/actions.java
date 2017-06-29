@@ -222,11 +222,20 @@ public class actions {
                          break;
                     case 5:
 //                          Uploads implementation files (binary and/or source) to OpenML given a description.
-//                        Requires some work
-                        Flow flow = new Flow("weka.J48", "3.7.12", "description", "Java", "WEKA 3.7.12");
+                        String descriptionFlow;
+                        String codeJar;
+                        String sourceZip;
+                        System.out.println("Enter the description of Flow : ");                       
+                        descriptionFlow = input.next();
+                        System.out.println("Enter the CodeJar File of Flow : ");
+                        codeJar = input.next();
+                        System.out.println("Enter the sourceZip File of Flow : ");
+                        sourceZip = input.next();
+                        Flow flow = new Flow("weka.J48", "3.7.12", descriptionFlow, "Java", "WEKA 3.7.12");
                         File description3 = Conversion.stringToTempFile(xstream.toXML(flow), "some_name", "xml");
-                        UploadFlow response3 = openml.flowUpload( description3, new File("code.jar"), new File("source.zip"));
+                        UploadFlow response3 = openml.flowUpload( description3, new File(codeJar), new File(sourceZip));
                         int flow_id3 = response3.getId();
+                        System.out.println("Here's the ID of uploaded flow : "+ flow_id3);
                         break;
                     default:
                         System.out.println("Please Press the valid key : ");
